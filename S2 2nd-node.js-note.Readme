@@ -1,0 +1,228 @@
+# Namaste Node.js — Season 2, Episode 2
+
+## DevTinder: Requirements, Planning, Database Design & REST API Design
+
+This episode focuses on **thinking and planning before coding** — requirements, architecture, database design, API design, and the initial DevTinder system design.
+
+## 1. DevTinder
+
+DevTinder is a Tinder-like platform for developers to make connections.
+
+### Initial Features
+
+* Signup & Login
+* Create/update profile
+* Developer feed/explore
+* Send connection request
+* Ignore profiles
+* View connections/matches
+* View sent/received requests
+
+Future features may include reporting, blocking, and OTP validation.
+
+## 2. Development Workflow
+
+```text
+Requirements
+     ↓
+UI / Design
+     ↓
+High-Level Design
+     ↓
+Low-Level Design
+     ↓
+Database Design
+     ↓
+API Design
+     ↓
+Development
+     ↓
+Testing → Deployment → Maintenance
+```
+
+Good planning reduces unnecessary refactoring and makes implementation easier.
+
+## 3. Technical Stack
+
+```text
+Frontend → React
+Backend  → Node.js
+Database → MongoDB
+```
+
+DevTinder is planned as separate **frontend + backend projects/services**.
+
+## 4. Database Design
+
+MongoDB uses:
+
+```text
+Database → Collections → Documents → Fields
+```
+
+### User Collection
+
+Stores user information such as:
+
+```text
+firstName
+lastName
+email
+password
+age
+gender
+skills
+preferences
+```
+
+### Connection Request Collection
+
+Stores relationship data separately:
+
+```text
+fromUserId
+toUserId
+status
+```
+
+This keeps **user information** separate from **connection relationships**.
+
+## 5. Connection Request Status
+
+```text
+pending  → Request sent
+accepted → Request accepted
+rejected → Request rejected
+ignored  → Profile ignored
+```
+
+**Ignored ≠ Rejected**
+
+* **Ignored** → no normal connection request is sent.
+* **Rejected** → an existing pending request is rejected.
+
+## 6. REST APIs
+
+Frontend communicates with the backend through APIs.
+
+```text
+Frontend
+   ↓
+API Request
+   ↓
+Backend
+   ↓
+Database
+   ↓
+Response
+   ↓
+Frontend
+```
+
+### HTTP Methods
+
+| Method   | Purpose        |
+| -------- | -------------- |
+| `GET`    | Retrieve       |
+| `POST`   | Create/send    |
+| `PUT`    | Update/replace |
+| `PATCH`  | Partial update |
+| `DELETE` | Delete         |
+
+### CRUD
+
+```text
+Create → POST
+Read   → GET
+Update → PUT / PATCH
+Delete → DELETE
+```
+
+## 7. API Naming
+
+An API operation is identified by:
+
+```text
+HTTP Method + URL
+```
+
+Therefore:
+
+```text
+GET  /profile
+POST /profile
+```
+
+are different operations.
+
+Prefer consistent **resource-oriented URLs** rather than putting actions unnecessarily into every URL.
+
+## 8. Initial DevTinder APIs
+
+Planned APIs include:
+
+```text
+Signup
+Login
+Get Profile
+Create/Update Profile
+Delete Profile
+Send Connection Request
+Review Requests
+Get Received Requests
+Get Connections
+```
+
+More APIs can be added as requirements evolve.
+
+## 9. Authentication
+
+DevTinder is planned to use **JWT authentication**.
+
+Later implementation covers authentication, password handling, validation, and security details.
+
+## 10. HLD vs LLD
+
+**HLD (High-Level Design)** focuses on overall architecture, services, communication, technology, security, etc.
+
+**LLD (Low-Level Design)** goes deeper into database structure, API contracts, fields, data types, validation, enums, and constraints.
+
+## Interview Quick Revision
+
+**Why plan before coding?**
+To understand the system and reduce unnecessary refactoring.
+
+**What is database design?**
+Deciding what data is needed, how it is organized, and which collections/tables are required.
+
+**Why separate User and Connection Request?**
+User stores user information; Connection Request stores relationship data.
+
+**What is an API contract?**
+An agreement defining how an API is called and what it accepts/returns.
+
+**Can system design change later?**
+Yes. Good designs evolve as requirements change.
+
+**PUT vs PATCH?**
+Both update resources, but the detailed distinction is covered later in the course.
+
+## Final Mental Model
+
+```text
+Requirements
+     ↓
+Architecture
+     ↓
+Database + API Design
+     ↓
+Implementation
+     ↓
+Testing
+     ↓
+Deployment
+     ↓
+Maintenance
+```
+
+> **Main takeaway: Think before coding. Understand the requirements, architecture, database, and APIs first — then implementation becomes much easier.**
