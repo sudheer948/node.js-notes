@@ -1,0 +1,421 @@
+# Namaste Node.js — Season 2, Episode 3
+
+## Starting DevTinder Backend from Scratch
+
+**Topics:** npm • Express • Versions • Servers • Nodemon
+
+---
+
+## 🎯 Episode Goal
+
+Start building the **DevTinder backend from scratch** without boilerplate or copied source code.
+
+> **Key lesson:** Code along and understand *why* each step is needed.
+
+---
+
+## 1. Project Structure
+
+DevTinder has two independently built projects:
+
+```text
+DevTinder
+├── Frontend
+└── Backend
+```
+
+This episode starts with the **Backend**.
+
+---
+
+## 2. Initialize Node.js Project
+
+```bash
+npm init
+```
+
+Creates:
+
+```text
+package.json
+```
+
+`npm init` initializes project configuration; it does **not** create a complete application.
+
+---
+
+## 3. package.json
+
+`package.json` is the project's **configuration/metadata file**.
+
+It can contain:
+
+* Project name/version
+* Description
+* Entry point
+* Scripts
+* Dependencies
+* Author/license
+* Other metadata
+
+Think of it as an **index describing the project**.
+
+---
+
+## 4. src & app.js
+
+Common structure:
+
+```text
+project/
+├── src/
+│   └── app.js
+├── package.json
+└── package-lock.json
+```
+
+Run the application:
+
+```bash
+node src/app.js
+```
+
+Initially, `app.js` is simply JavaScript executed by Node.js.
+
+---
+
+## 5. Why Express?
+
+A backend needs a server that can:
+
+```text
+Receive Request → Process Request → Send Response
+```
+
+**Express.js** is a Node.js web framework that simplifies building:
+
+* Web servers
+* APIs
+* Request handlers
+* Routes
+
+Install:
+
+```bash
+npm install express
+# or
+npm i express
+```
+
+---
+
+## 6. What Happens When Installing Express?
+
+```bash
+npm install express
+```
+
+npm:
+
+1. Downloads Express.
+2. Downloads its dependency tree.
+3. Places packages inside `node_modules`.
+4. Records Express in `package.json`.
+5. Creates/updates `package-lock.json`.
+
+```text
+Express
+  ↓
+Dependencies
+  ↓
+Dependencies of dependencies
+  ↓
+Large dependency tree
+```
+
+---
+
+## 7. node_modules
+
+`node_modules` contains the **installed package code and dependency tree**.
+
+It can become very large because packages depend on other packages.
+
+> Usually, `node_modules` should **not** be pushed to GitHub. Dependencies are restored using `package.json` and the lock file.
+
+---
+
+## 8. package.json vs package-lock.json
+
+| File                | Purpose                                             |
+| ------------------- | --------------------------------------------------- |
+| `package.json`      | Project metadata, scripts & dependency requirements |
+| `package-lock.json` | Resolved dependency tree & concrete versions        |
+
+### Important
+
+`package.json` may specify a **version range**, while `package-lock.json` records the resolved versions used for reproducible installs.
+
+---
+
+## 9. Semantic Versioning
+
+Common format:
+
+```text
+MAJOR.MINOR.PATCH
+   4  . 19  . 2
+```
+
+| Part  | Meaning                               |
+| ----- | ------------------------------------- |
+| MAJOR | Potential breaking changes            |
+| MINOR | Backward-compatible new functionality |
+| PATCH | Backward-compatible bug fixes         |
+
+Example:
+
+```text
+4.19.2 → 4.19.3   PATCH
+4.19.2 → 4.20.0   MINOR
+4.x.x  → 5.x.x    MAJOR
+```
+
+Be especially careful with **major-version upgrades**.
+
+---
+
+## 10. `^` vs `~`
+
+For a stable version such as:
+
+```text
+^4.19.2
+```
+
+npm can generally accept compatible versions **below the next major version**.
+
+```text
+~4.19.2
+```
+
+Generally allows **patch-level updates within `4.19.x`**.
+
+```text
+4.19.2
+```
+
+Requests the exact version.
+
+> **Interview tip:** Know version ranges instead of blindly copying `^` or `~`.
+
+---
+
+## 11. Curiosity = Developer Skill
+
+The instructor emphasizes asking questions such as:
+
+* Why is `node_modules` so large?
+* What does `package-lock.json` do?
+* What is `.bin`?
+* Why do packages have dependencies?
+* What do `^` and `~` mean?
+
+> Strong developers don't just run commands — they understand what those commands actually do.
+
+---
+
+## 12. Create an Express Server
+
+```js
+const express = require("express");
+
+const app = express();
+
+app.listen(3000, () => {
+  console.log("Server running");
+});
+```
+
+Flow:
+
+```text
+express()
+   ↓
+Create application
+   ↓
+app.listen(port)
+   ↓
+Server starts listening
+```
+
+---
+
+## 13. Request Handlers
+
+A **request handler** handles an incoming request and sends a response.
+
+```js
+app.use((req, res) => {
+  res.send("Hello from the server");
+});
+```
+
+* `req` → incoming request
+* `res` → response object
+* `res.send()` → sends response
+
+---
+
+## 14. localhost & Ports
+
+Example:
+
+```text
+http://localhost:3000
+http://localhost:7777
+```
+
+Request flow:
+
+```text
+Browser
+   ↓
+localhost:3000
+   ↓
+Express Server
+   ↓
+Request Handler
+   ↓
+res.send()
+   ↓
+Browser
+```
+
+If the server is stopped, nothing is listening on that port.
+
+---
+
+## 15. Routes
+
+Different paths can have different handlers:
+
+```js
+app.get("/test", (req, res) => {
+  res.send("Test route");
+});
+
+app.get("/hello", (req, res) => {
+  res.send("Hello route");
+});
+```
+
+A request to an unhandled route can produce:
+
+```text
+Cannot GET /route
+```
+
+---
+
+## 16. Why Nodemon?
+
+Normal:
+
+```bash
+node src/app.js
+```
+
+After changing code, the server **doesn't automatically restart**.
+
+Nodemon watches files and automatically restarts the Node.js process when relevant changes occur.
+
+```bash
+npm install -g nodemon
+```
+
+`-g` = install globally.
+
+Modern projects often prefer a **local development dependency** so the tooling is controlled by the project.
+
+---
+
+## 17. npm Scripts
+
+Instead of remembering commands, define scripts:
+
+```json
+"scripts": {
+  "start": "node src/app.js",
+  "dev": "nodemon src/app.js"
+}
+```
+
+Run:
+
+```bash
+npm run start
+npm run dev
+```
+
+### `start` vs `dev`
+
+```text
+start → Node → no automatic restart
+dev   → Nodemon → automatic restart
+```
+
+---
+
+## 🧠 Interview Quick Revision
+
+**What is `package.json`?**
+Project configuration/metadata file containing scripts, dependencies and project information.
+
+**What is `node_modules`?**
+Directory containing installed packages and their dependency tree.
+
+**What is `package-lock.json`?**
+Lock file recording the resolved dependency tree and concrete versions.
+
+**What is Express?**
+A Node.js web framework for building servers and APIs.
+
+**What does `app.listen()` do?**
+Starts the application listening on a specified port.
+
+**What is a request handler?**
+A function that handles an incoming request and sends a response.
+
+**What is Nodemon?**
+A development tool that automatically restarts the Node.js application when watched files change.
+
+---
+
+## ⚡ Quick Revision
+
+```text
+npm init
+   ↓
+package.json
+   ↓
+Install Express
+   ↓
+node_modules + package-lock.json
+   ↓
+Create Express app
+   ↓
+app.listen(port)
+   ↓
+Create routes/handlers
+   ↓
+Nodemon for development
+   ↓
+npm scripts
+```
+
+### Final Mental Model
+
+**npm manages the project and dependencies → Express creates the server/API layer → routes and handlers process requests → Nodemon improves development workflow → package-lock.json helps keep installations reproducible.**
+
+> **Don't blindly copy commands. Understand what npm creates, how dependencies work, how versions behave, and how a request travels through your backend.**
